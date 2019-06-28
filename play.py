@@ -26,7 +26,6 @@ def main():
 
     def make_env():
         env_out = envs[args.env](use_simulator=True, frequency=250)
-        env_out = bench.Monitor(env_out, logger.get_dir(), allow_early_resets=True)
         return env_out
 
     env = DummyVecEnv([make_env])
