@@ -37,15 +37,15 @@ def train(env, num_timesteps, logdir, save, load, seed, tensorboard):
         learning_rate=3e-4,
         cliprange=0.2,
         verbose=1,
-        tensorboard_log=tensorboard
+        tensorboard_log=tensorboard,
     )
 
     # Optionally load before or save after training
     if load is not None:
         model.load_parameters(load)
     model.learn(total_timesteps=num_timesteps)
-    if save is not None:
-        model.save(logdir + "/" + save)
+    if save:
+        model.save(logdir + "/model")
 
     return model, env
 
@@ -56,25 +56,31 @@ def main():
     # Parse command line args
     parser = arg_parser()
     parser.add_argument("-e", "--env", default="down", choices=list(envs.keys()))
-    parser.add_argument("-p", "--play", default=False, action="store_true")
     parser.add_argument("-ns", "--num-timesteps", type=str, default="1e6")
-    parser.add_argument(
-        "-o", "--output-formats", nargs="*", default=["stdout", "log", "csv", "tensorboard"]
-    )
-    parser.add_argument("-ld", "--logdir", type=str, default='logs')
-    parser.add_argument("-sd", "--seed", type=int, default=-1)
-    parser.add_argument("-s", "--save", type=str, default=None)
+    parser.add_argument("-ld", "--logdir", type=str, default="logs")
+    parser.add_argument("-v", "--video", type=str, default=None)
     parser.add_argument("-l", "--load", type=str, default=None)
+    parser.add_argument("-s", "--save", action="store_true")
+    parser.add_argument("-p", "--play", action="store_true")
+    parser.add_argument("-sd", "--seed", type=int, default=-1)
+    parser.add_argument(
+        "-o",
+        "--output-formats",
+        nargs="*",
+        default=["stdout", "log", "csv", "tensorboard"],
+    )
     args = parser.parse_args()
 
     # Set default seed
     if args.seed == -1:
-        seed = np.random.randint(1,1000)
+        seed = np.random.randint(1, 1000)
         print("Seed is", seed)
     else:
         seed = args.seed
 
-    logdir = args.logdir + "/" + args.env + "/" + args.num_timesteps + "/seed-" + str(seed)
+    logdir = (
+        args.logdir + "/" + args.env + "/" + args.num_timesteps + "/seed-" + str(seed)
+    )
     tb_logdir = logdir + "/tb"
     logger.configure(logdir, args.output_formats)
 
@@ -86,8 +92,8 @@ def main():
         save=args.save,
         load=args.load,
         seed=seed,
-        tensorboard=tb_logdir if "tensorboard" in args.output_formats else None
-    ) 
+        tensorboard=tb_logdir if "tensorboard" in args.output_formats else None,
+    )
 
     if args.play:
         logger.log("Running trained model")

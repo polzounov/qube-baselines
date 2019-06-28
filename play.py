@@ -41,7 +41,7 @@ def main():
         noptepochs=10,
         ent_coef=0.0,
         learning_rate=3e-4,
-        cliprange=0.2
+        cliprange=0.2,
     )
     model.load_parameters(args.load)
 
