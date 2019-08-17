@@ -21,28 +21,20 @@ def main():
     # Parse command line args
     parser = arg_parser()
     parser.add_argument("-e", "--env", default="down", choices=list(envs.keys()))
+    parser.add_argument("-hw", "--use-hardware", action="store_true")
     parser.add_argument("-l", "--load", type=str, default=None)
     args = parser.parse_args()
 
     def make_env():
-        env_out = envs[args.env](use_simulator=True, frequency=250)
+        env_out = envs[args.env](
+            use_simulator=False if args.use_hardware else True, frequency=250
+        )
         return env_out
 
     env = DummyVecEnv([make_env])
 
     policy = MlpPolicy
-    model = PPO2(
-        policy=policy,
-        env=env,
-        n_steps=2048,
-        nminibatches=32,
-        lam=0.95,
-        gamma=0.99,
-        noptepochs=10,
-        ent_coef=0.0,
-        learning_rate=3e-4,
-        cliprange=0.2,
-    )
+    model = PPO2(policy=policy, env=env)
     model.load_parameters(args.load)
 
     print("Running trained model")
@@ -50,8 +42,11 @@ def main():
     obs[:] = env.reset()
     while True:
         actions = model.step(obs)[0]
-        obs[:] = env.step(actions)[0]
+        obs[:], reward, done, _ = env.step(actions)
         env.render()
+        if done:
+            print("done")
+            obs[:] = env.reset()
 
     env.close()
 
