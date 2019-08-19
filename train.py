@@ -65,7 +65,7 @@ def train(
         verbose=1,
         tensorboard_log=tensorboard,
     )
-
+    print("save callback called")
     if save and save_interval > 0:
         callback = init_save_callback(logdir, 2048, save_interval)
     else:
@@ -111,9 +111,11 @@ def main():
     else:
         seed = args.seed
 
-    logdir = (
-        args.logdir + "/" + args.env + "/" + args.num_timesteps + "/seed-" + str(seed)
+    device_type = "hardware" if args.use_hardware else "simulator"
+    logdir = "{}/{}/{}/{}/seed-{}".format(
+        args.logdir, device_type, args.env, args.num_timesteps, str(seed)
     )
+
     tb_logdir = logdir + "/tb"
     logger.configure(logdir, args.output_formats)
 
