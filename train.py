@@ -65,7 +65,6 @@ def train(
         verbose=1,
         tensorboard_log=tensorboard,
     )
-    print("save callback called")
     if save and save_interval > 0:
         callback = init_save_callback(logdir, 2048, save_interval)
     else:
