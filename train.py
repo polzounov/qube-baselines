@@ -30,9 +30,9 @@ def init_save_callback(logdir, batch_size, save_interval):
 
         # Note: for this to ever be true save_interval must be a multiple of 2048
         if step_number % save_interval == 0:
-            if not os.path.isdir(logdir + "/partial-train"):
-                os.makedirs(logdir + "/partial-train")
-            _locals["self"].save(logdir + "/partial-train/{}".format(step_number))
+            if not os.path.isdir(logdir + "/checkpoints"):
+                os.makedirs(logdir + "/checkpoints")
+            _locals["self"].save(logdir + "/checkpoints/{}".format(step_number))
 
         return True  # Returning False will stop training early
 
