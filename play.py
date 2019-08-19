@@ -26,9 +26,7 @@ def main():
     args = parser.parse_args()
 
     def make_env():
-        env_out = envs[args.env](
-            use_simulator=False if args.use_hardware else True, frequency=250
-        )
+        env_out = envs[args.env](use_simulator=not args.use_hardware, frequency=250)
         return env_out
 
     env = DummyVecEnv([make_env])
@@ -43,7 +41,8 @@ def main():
     while True:
         actions = model.step(obs)[0]
         obs[:], reward, done, _ = env.step(actions)
-        env.render()
+        if not args.use_hardware:
+            env.render()
         if done:
             print("done")
             obs[:] = env.reset()

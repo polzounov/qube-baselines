@@ -43,7 +43,7 @@ def train(
     env, num_timesteps, hardware, logdir, save, save_interval, load, seed, tensorboard
 ):
     def make_env():
-        env_out = env(use_simulator=False if hardware else True, frequency=250)
+        env_out = env(use_simulator=not hardware, frequency=250)
         env_out = bench.Monitor(env_out, logger.get_dir(), allow_early_resets=True)
         return env_out
 
@@ -140,7 +140,8 @@ def main():
         while True:
             actions = model.step(obs)[0]
             obs[:] = env.step(actions)[0]
-            env.render()
+            if not args.use_hardware:
+                env.render()
 
     env.close()
 
