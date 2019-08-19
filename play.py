@@ -3,7 +3,22 @@
 import numpy as np
 import gym
 
-from gym_brt.envs import QubeBeginDownEnv, QubeBeginUprightEnv
+from gym_brt.envs import (
+    QubeSwingupEnv,
+    QubeSwingupSparseEnv,
+    QubeSwingupFollowEnv,
+    QubeSwingupFollowSparseEnv,
+    QubeBalanceEnv,
+    QubeBalanceSparseEnv,
+    QubeBalanceFollowEnv,
+    QubeBalanceFollowSparseEnv,
+    QubeDampenEnv,
+    QubeDampenSparseEnv,
+    QubeDampenFollowEnv,
+    QubeDampenFollowSparseEnv,
+    QubeRotorEnv,
+    QubeRotorFollowEnv,
+)
 
 from stable_baselines.common.vec_env.vec_normalize import VecNormalize
 from stable_baselines.common.vec_env.dummy_vec_env import DummyVecEnv
@@ -16,7 +31,24 @@ from stable_baselines.ppo2 import PPO2
 
 
 def main():
-    envs = {"down": QubeBeginDownEnv, "up": QubeBeginUprightEnv}
+    envs = {
+        "down": QubeSwingupEnv,
+        "up": QubeBalanceEnv,
+        "QubeSwingupEnv": QubeSwingupEnv,
+        "QubeSwingupSparseEnv": QubeSwingupSparseEnv,
+        "QubeSwingupFollowEnv": QubeSwingupFollowEnv,
+        "QubeSwingupFollowSparseEnv": QubeSwingupFollowSparseEnv,
+        "QubeBalanceEnv": QubeBalanceEnv,
+        "QubeBalanceSparseEnv": QubeBalanceSparseEnv,
+        "QubeBalanceFollowEnv": QubeBalanceFollowEnv,
+        "QubeBalanceFollowSparseEnv": QubeBalanceFollowSparseEnv,
+        "QubeDampenEnv": QubeDampenEnv,
+        "QubeDampenSparseEnv": QubeDampenSparseEnv,
+        "QubeDampenFollowEnv": QubeDampenFollowEnv,
+        "QubeDampenFollowSparseEnv": QubeDampenFollowSparseEnv,
+        "QubeRotorEnv": QubeRotorEnv,
+        "QubeRotorFollowEnv": QubeRotorFollowEnv,
+    }
 
     # Parse command line args
     parser = arg_parser()
