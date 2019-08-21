@@ -2,25 +2,43 @@
 import argparse
 import os
 
+import seaborn as sns
 import matplotlib.pyplot as plt
-from stable_baselines import results_plotter
+from baselines.common import plot_util as pu
+
+sns.set()
 
 
 def main():
-
-    parser = argparse.ArgumentParser(
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter
-    )
+    parser = argparse.ArgumentParser()
     parser.add_argument(
-        "-d", "--dirs", help="List of log directories", nargs="*", default=["logs1e6"]
+        "-d", "--dirs", help="List of log directories", required=True, nargs="*"
     )
     parser.add_argument("-ns", "--num_timesteps", type=float, default=1e6)
     parser.add_argument("-x", "--xaxis", help="Varible on X-axis", default="timesteps")
-    parser.add_argument("-n", "--task_name", help="Title of plot", default="Qube Sim")
+    parser.add_argument(
+        "-n", "--task_name", help="Title of plot", default="Qube Simulator"
+    )
     args = parser.parse_args()
-    args.dirs = [os.path.abspath(folder) for folder in args.dirs]
-    results_plotter.plot_results(
-        args.dirs, int(args.num_timesteps), args.xaxis, args.task_name
+    dirs = [os.path.abspath(folder) for folder in args.dirs]
+
+    xy_list = pu.load_results(dirs)
+
+    pu.plot_results(
+        xy_list,
+        # xy_fn=default_xy_fn,
+        # split_fn=lambda _: "",
+        # group_fn=default_split_fn,
+        average_group=True,
+        shaded_std=False,
+        shaded_err=True,
+        figsize=None,
+        legend_outside=False,
+        resample=0,
+        smooth_step=1.0,
+        tiling="vertical",
+        xlabel=args.xaxis,
+        ylabel="Reward",
     )
     plt.show()
 
