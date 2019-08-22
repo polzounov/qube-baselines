@@ -61,25 +61,26 @@ def main():
         env_out = envs[args.env](use_simulator=not args.use_hardware, frequency=250)
         return env_out
 
-    env = DummyVecEnv([make_env])
+    try:
+        env = DummyVecEnv([make_env])
 
-    policy = MlpPolicy
-    model = PPO2(policy=policy, env=env)
-    model.load_parameters(args.load)
+        policy = MlpPolicy
+        model = PPO2(policy=policy, env=env)
+        model.load_parameters(args.load)
 
-    print("Running trained model")
-    obs = np.zeros((env.num_envs,) + env.observation_space.shape)
-    obs[:] = env.reset()
-    while True:
-        actions = model.step(obs)[0]
-        obs[:], reward, done, _ = env.step(actions)
-        if not args.use_hardware:
-            env.render()
-        if done:
-            print("done")
-            obs[:] = env.reset()
-
-    env.close()
+        print("Running trained model")
+        obs = np.zeros((env.num_envs,) + env.observation_space.shape)
+        obs[:] = env.reset()
+        while True:
+            actions = model.step(obs)[0]
+            obs[:], reward, done, _ = env.step(actions)
+            if not args.use_hardware:
+                env.render()
+            if done:
+                print("done")
+                obs[:] = env.reset()
+    finally:
+        env.close()
 
 
 if __name__ == "__main__":
