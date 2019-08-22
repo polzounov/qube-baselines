@@ -52,13 +52,24 @@ def main():
 
     # Parse command line args
     parser = arg_parser()
-    parser.add_argument("-e", "--env", default="down", choices=list(envs.keys()))
+    parser.add_argument("-e", "--env", choices=list(envs.keys()))
     parser.add_argument("-hw", "--use-hardware", action="store_true")
     parser.add_argument("-l", "--load", type=str, default=None)
     args = parser.parse_args()
 
+    env = None
+    if args.env is None:
+        # If env isn't given try to find the env name in the filename
+        dirs_from_filename = args.load.split("/")
+        for d in dirs_from_filename:
+            if d in envs.keys():
+                env = d
+                print("'env' argument is not given. Assuming env is '{}'".format(d))
+        if env is None:
+            raise ValueError("the following arguments are required: -e/--env")
+
     def make_env():
-        env_out = envs[args.env](use_simulator=not args.use_hardware, frequency=250)
+        env_out = envs[env](use_simulator=not args.use_hardware, frequency=250)
         return env_out
 
     try:
