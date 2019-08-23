@@ -18,6 +18,10 @@ from gym_brt.envs import (
     QubeDampenFollowSparseEnv,
     QubeRotorEnv,
     QubeRotorFollowEnv,
+    QubeBalanceFollowSineWaveEnv,
+    QubeSwingupFollowSineWaveEnv,
+    QubeRotorFollowSineWaveEnv,
+    QubeDampenFollowSineWaveEnv,
 )
 
 from stable_baselines.common.vec_env.vec_normalize import VecNormalize
@@ -48,6 +52,10 @@ def main():
         "QubeDampenFollowSparseEnv": QubeDampenFollowSparseEnv,
         "QubeRotorEnv": QubeRotorEnv,
         "QubeRotorFollowEnv": QubeRotorFollowEnv,
+        "QubeBalanceFollowSineWaveEnv": QubeBalanceFollowSineWaveEnv,
+        "QubeSwingupFollowSineWaveEnv": QubeSwingupFollowSineWaveEnv,
+        "QubeRotorFollowSineWaveEnv": QubeRotorFollowSineWaveEnv,
+        "QubeDampenFollowSineWaveEnv": QubeDampenFollowSineWaveEnv,
     }
 
     # Parse command line args
@@ -57,7 +65,7 @@ def main():
     parser.add_argument("-l", "--load", type=str, default=None)
     args = parser.parse_args()
 
-    env = None
+    env = args.env
     if args.env is None:
         # If env isn't given try to find the env name in the filename
         dirs_from_filename = args.load.split("/")
