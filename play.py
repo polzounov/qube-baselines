@@ -36,8 +36,6 @@ from stable_baselines.ppo2 import PPO2
 
 def main():
     envs = {
-        "down": QubeSwingupEnv,
-        "up": QubeBalanceEnv,
         "QubeSwingupEnv": QubeSwingupEnv,
         "QubeSwingupSparseEnv": QubeSwingupSparseEnv,
         "QubeSwingupFollowEnv": QubeSwingupFollowEnv,
@@ -60,7 +58,7 @@ def main():
 
     # Parse command line args
     parser = arg_parser()
-    parser.add_argument("-e", "--env", choices=list(envs.keys()))
+    parser.add_argument("-e", "--env", choices=list(envs.keys()), required=True)
     parser.add_argument("-hw", "--use-hardware", action="store_true")
     parser.add_argument("-l", "--load", type=str, default=None)
     args = parser.parse_args()

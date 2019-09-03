@@ -97,8 +97,6 @@ def train(
 
 def main():
     envs = {
-        "down": QubeSwingupEnv,
-        "up": QubeBalanceEnv,
         "QubeSwingupEnv": QubeSwingupEnv,
         "QubeSwingupSparseEnv": QubeSwingupSparseEnv,
         "QubeSwingupFollowEnv": QubeSwingupFollowEnv,
@@ -117,14 +115,14 @@ def main():
 
     # Parse command line args
     parser = arg_parser()
-    parser.add_argument("-e", "--env", default="down", choices=list(envs.keys()))
-    parser.add_argument("-ns", "--num-timesteps", type=str, default="1e6")
+    parser.add_argument("-e", "--env", choices=list(envs.keys()), required=True)
+    parser.add_argument("-ns", "--num-timesteps", type=float, default=1e6)
     parser.add_argument("-hw", "--use-hardware", action="store_true")
     parser.add_argument("-ld", "--logdir", type=str, default="logs")
     # parser.add_argument("-v", "--video", type=str, default=None) # Doesn't work with vpython
     parser.add_argument("-l", "--load", type=str, default=None)
     parser.add_argument("-s", "--save", action="store_true")
-    parser.add_argument("-si", "--save-interval", type=str, default="5e4")
+    parser.add_argument("-si", "--save-interval", type=float, default=5e4)
     parser.add_argument("-p", "--play", action="store_true")
     parser.add_argument("-sd", "--seed", type=int, default=-1)
     parser.add_argument(
@@ -151,12 +149,12 @@ def main():
     logger.configure(logdir, args.output_formats)
 
     # Round save interval to a multiple of 2048
-    save_interval = int(np.ceil(float(args.save_interval) / 2048)) if args.save else 0
+    save_interval = int(np.ceil(args.save_interval / 2048)) if args.save else 0
 
     # Run training script (+ loading/saving)
     model, env = train(
         envs[args.env],
-        num_timesteps=int(float(args.num_timesteps)),
+        num_timesteps=int(args.num_timesteps),
         hardware=args.use_hardware,
         logdir=logdir,
         save=args.save,
