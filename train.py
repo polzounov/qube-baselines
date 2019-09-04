@@ -41,9 +41,9 @@ def init_save_callback(logdir, batch_size, save_interval):
     ):
         """Save model every `save_interval` steps."""
         update_number = _locals["update"]  # Number of updates to policy
-        step_number = update_number * 2048  # Number of steps taken on environment
+        step_number = update_number * batch_size  # Number of steps taken on environment
 
-        # Note: for this to ever be true save_interval must be a multiple of 2048
+        # Note: for this to ever be true save_interval must be a multiple of batch_size
         if step_number % save_interval == 0:
             if not os.path.isdir(logdir + "/checkpoints"):
                 os.makedirs(logdir + "/checkpoints")
