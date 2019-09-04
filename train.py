@@ -116,7 +116,7 @@ def main():
     # Parse command line args
     parser = arg_parser()
     parser.add_argument("-e", "--env", choices=list(envs.keys()), required=True)
-    parser.add_argument("-ns", "--num-timesteps", type=float, default=1e6)
+    parser.add_argument("-ns", "--num-timesteps", type=str, default="1e6")
     parser.add_argument("-hw", "--use-hardware", action="store_true")
     parser.add_argument("-ld", "--logdir", type=str, default="logs")
     # parser.add_argument("-v", "--video", type=str, default=None) # Doesn't work with vpython
@@ -154,7 +154,7 @@ def main():
     # Run training script (+ loading/saving)
     model, env = train(
         envs[args.env],
-        num_timesteps=int(args.num_timesteps),
+        num_timesteps=int(float(args.num_timesteps)),
         hardware=args.use_hardware,
         logdir=logdir,
         save=args.save,
