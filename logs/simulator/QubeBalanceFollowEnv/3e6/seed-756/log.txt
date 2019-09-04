@@ -1,0 +1,61 @@
+Logging to logs/simulator/QubeBalanceFollowEnv/3e6/seed-756
+-------------------------------------
+| approxkl           | 0.0040313005 |
+| clipfrac           | 0.044384766  |
+| ep_len_mean        | 54.7         |
+| ep_reward_mean     | 50.9         |
+| explained_variance | -0.0314      |
+| fps                | 457          |
+| n_updates          | 1            |
+| policy_entropy     | 1.4349108    |
+| policy_loss        | -0.003234777 |
+| serial_timesteps   | 2048         |
+| time_elapsed       | 2.38e-06     |
+| total_timesteps    | 2048         |
+| value_loss         | 68.59712     |
+-------------------------------------
+-------------------------------------
+| approxkl           | 0.0041643856 |
+| clipfrac           | 0.049707033  |
+| ep_len_mean        | 59.2         |
+| ep_reward_mean     | 55.1         |
+| explained_variance | 0.00407      |
+| fps                | 402          |
+| n_updates          | 2            |
+| policy_entropy     | 1.4539541    |
+| policy_loss        | -0.004789838 |
+| serial_timesteps   | 4096         |
+| time_elapsed       | 4.48         |
+| total_timesteps    | 4096         |
+| value_loss         | 74.97653     |
+-------------------------------------
+-------------------------------------
+| approxkl           | 0.0029876546 |
+| clipfrac           | 0.033496093  |
+| ep_len_mean        | 60.8         |
+| ep_reward_mean     | 56.6         |
+| explained_variance | 0.0297       |
+| fps                | 397          |
+| n_updates          | 3            |
+| policy_entropy     | 1.4758757    |
+| policy_loss        | -0.002829797 |
+| serial_timesteps   | 6144         |
+| time_elapsed       | 9.57         |
+| total_timesteps    | 6144         |
+| value_loss         | 73.23699     |
+-------------------------------------
+--------------------------------------
+| approxkl           | 0.0051444513  |
+| clipfrac           | 0.0652832     |
+| ep_len_mean        | 66.3          |
+| ep_reward_mean     | 61.3          |
+| explained_variance | 0.012         |
+| fps                | 378           |
+| n_updates          | 4             |
+| policy_entropy     | 1.5043738     |
+| policy_loss        | -0.0077401944 |
+| serial_timesteps   | 8192          |
+| time_elapsed       | 14.7          |
+| total_timesteps    | 8192          |
+| value_loss         | 71.86058      |
+--------------------------------------
