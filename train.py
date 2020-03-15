@@ -4,22 +4,24 @@ import numpy as np
 import gym
 import os
 
-from gym_brt.envs import (
-    QubeSwingupEnv,
-    QubeSwingupSparseEnv,
-    QubeSwingupFollowEnv,
-    QubeSwingupFollowSparseEnv,
-    QubeBalanceEnv,
-    QubeBalanceSparseEnv,
-    QubeBalanceFollowEnv,
-    QubeBalanceFollowSparseEnv,
-    QubeDampenEnv,
-    QubeDampenSparseEnv,
-    QubeDampenFollowEnv,
-    QubeDampenFollowSparseEnv,
-    QubeRotorEnv,
-    QubeRotorFollowEnv,
-)
+# from gym_brt.envs import (
+#     QubeSwingupEnv,
+#     QubeSwingupSparseEnv,
+#     QubeSwingupFollowEnv,
+#     QubeSwingupFollowSparseEnv,
+#     QubeBalanceEnv,
+#     QubeBalanceSparseEnv,
+#     QubeBalanceFollowEnv,
+#     QubeBalanceFollowSparseEnv,
+#     QubeDampenEnv,
+#     QubeDampenSparseEnv,
+#     QubeDampenFollowEnv,
+#     QubeDampenFollowSparseEnv,
+#     QubeRotorEnv,
+#     QubeRotorFollowEnv,
+# )
+
+from QubeSwingupRandEnv import QubeSwingupEnv
 
 from stable_baselines.common.vec_env.vec_normalize import VecNormalize
 from stable_baselines.common.vec_env.dummy_vec_env import DummyVecEnv
@@ -54,9 +56,7 @@ def init_save_callback(logdir, batch_size, save_interval):
     return callback
 
 
-def train(
-    env, num_timesteps, hardware, logdir, save, save_interval, load, seed, tensorboard
-):
+def train(env, num_timesteps, hardware, logdir, save, save_interval, load, seed):
     def make_env():
         env_out = env(use_simulator=not hardware, frequency=250)
         env_out = bench.Monitor(env_out, logger.get_dir(), allow_early_resets=True)
@@ -78,7 +78,6 @@ def train(
         learning_rate=3e-4,
         cliprange=0.2,
         verbose=1,
-        tensorboard_log=tensorboard,
     )
     if save and save_interval > 0:
         callback = init_save_callback(logdir, 2048, save_interval)
@@ -98,24 +97,26 @@ def train(
 def main():
     envs = {
         "QubeSwingupEnv": QubeSwingupEnv,
-        "QubeSwingupSparseEnv": QubeSwingupSparseEnv,
-        "QubeSwingupFollowEnv": QubeSwingupFollowEnv,
-        "QubeSwingupFollowSparseEnv": QubeSwingupFollowSparseEnv,
-        "QubeBalanceEnv": QubeBalanceEnv,
-        "QubeBalanceSparseEnv": QubeBalanceSparseEnv,
-        "QubeBalanceFollowEnv": QubeBalanceFollowEnv,
-        "QubeBalanceFollowSparseEnv": QubeBalanceFollowSparseEnv,
-        "QubeDampenEnv": QubeDampenEnv,
-        "QubeDampenSparseEnv": QubeDampenSparseEnv,
-        "QubeDampenFollowEnv": QubeDampenFollowEnv,
-        "QubeDampenFollowSparseEnv": QubeDampenFollowSparseEnv,
-        "QubeRotorEnv": QubeRotorEnv,
-        "QubeRotorFollowEnv": QubeRotorFollowEnv,
+        # "QubeSwingupSparseEnv": QubeSwingupSparseEnv,
+        # "QubeSwingupFollowEnv": QubeSwingupFollowEnv,
+        # "QubeSwingupFollowSparseEnv": QubeSwingupFollowSparseEnv,
+        # "QubeBalanceEnv": QubeBalanceEnv,
+        # "QubeBalanceSparseEnv": QubeBalanceSparseEnv,
+        # "QubeBalanceFollowEnv": QubeBalanceFollowEnv,
+        # "QubeBalanceFollowSparseEnv": QubeBalanceFollowSparseEnv,
+        # "QubeDampenEnv": QubeDampenEnv,
+        # "QubeDampenSparseEnv": QubeDampenSparseEnv,
+        # "QubeDampenFollowEnv": QubeDampenFollowEnv,
+        # "QubeDampenFollowSparseEnv": QubeDampenFollowSparseEnv,
+        # "QubeRotorEnv": QubeRotorEnv,
+        # "QubeRotorFollowEnv": QubeRotorFollowEnv,
     }
 
     # Parse command line args
     parser = arg_parser()
-    parser.add_argument("-e", "--env", choices=list(envs.keys()), required=True)
+    parser.add_argument(
+        "-e", "--env", choices=list(envs.keys()), default="QubeSwingupEnv"
+    )
     parser.add_argument("-ns", "--num-timesteps", type=str, default="1e6")
     parser.add_argument("-hw", "--use-hardware", action="store_true")
     parser.add_argument("-ld", "--logdir", type=str, default="logs")
@@ -126,10 +127,7 @@ def main():
     parser.add_argument("-p", "--play", action="store_true")
     parser.add_argument("-sd", "--seed", type=int, default=-1)
     parser.add_argument(
-        "-o",
-        "--output-formats",
-        nargs="*",
-        default=["stdout", "log", "csv", "tensorboard"],
+        "-o", "--output-formats", nargs="*", default=["stdout", "log", "csv"],
     )
     args = parser.parse_args()
 
@@ -145,7 +143,6 @@ def main():
         args.logdir, device_type, args.env, args.num_timesteps, str(seed)
     )
 
-    tb_logdir = logdir + "/tb"
     logger.configure(logdir, args.output_formats)
 
     # Round save interval to a multiple of 2048
@@ -161,7 +158,6 @@ def main():
         save_interval=save_interval,
         load=args.load,
         seed=seed,
-        tensorboard=tb_logdir if "tensorboard" in args.output_formats else None,
     )
 
     if args.play:
