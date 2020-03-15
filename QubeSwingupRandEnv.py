@@ -3,7 +3,10 @@ from numba import jit
 import numpy as np
 import gym
 
-from gym_brt.envs.rendering import QubeRenderer
+try:
+    from gym_brt.envs.rendering import QubeRenderer
+except:
+    pass
 from gym_brt.control import flip_and_hold_policy
 
 
@@ -63,19 +66,6 @@ def phys_params(
 
 # @jit
 def diff_ns_ode(state, t, action, phys_params, dt):
-    # def diff_ns_ode(state, t, action, dt):
-    #     Rm = 8.4
-    #     kt = 0.042
-    #     km = 0.042
-    #     mr = 0.095
-    #     Lr = 0.085
-    #     Dr = 0.00027
-    #     mp = 0.024
-    #     Lp = 0.129
-    #     Dp = 0.00005
-    #     g = 9.1
-    #     Jr = mr * Lr ** 2 / 12  # Rotary arm: Moment of inertia about pivot (kg-m^2)
-    #     Jp = mp * Lp ** 2 / 12  # Pendulum: Moment of inertia about pivot (kg-m^2)
     Rm, kt, km, mr, Lr, Dr, mp, Lp, Dp, g, Jr, Jp = phys_params
 
     Vm = action[0]  # Voltage applied to the motor
@@ -95,14 +85,10 @@ def diff_ns_ode(state, t, action, phys_params, dt):
 # @jit
 def next_state_ode(state, action, phys_params, dt=0.004):
     t = np.linspace(0.0, dt, 2)
-
     next_state = odeint(diff_ns_ode, state, t, args=(action, phys_params, dt))[1, :]
-    # next_state = odeint(diff_ns_ode, state, t, args=(action, dt))[1, :]
-
     theta, alpha, theta_dot, alpha_dot = next_state
     theta = ((theta + np.pi) % (2 * np.pi)) - np.pi
     alpha = ((alpha + np.pi) % (2 * np.pi)) - np.pi
-
     return np.array([theta, alpha, theta_dot, alpha_dot])
 
 
