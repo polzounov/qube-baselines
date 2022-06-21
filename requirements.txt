@@ -1,5 +1,5 @@
 gym==0.13.0
-numpy==1.16.4
+numpy==1.22.0
 seaborn==0.9.0
 vpython==7.5.1
 baselines==0.1.6
